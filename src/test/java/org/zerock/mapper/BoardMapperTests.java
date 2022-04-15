@@ -43,7 +43,7 @@ public class BoardMapperTests {
 
         listDTO.setType("tcw");
 
-        listDTO.setKeyword("11");
+        //listDTO.setKeyword("11");
 
         List<Board> boardList = boardMapper.selectList(listDTO);
 

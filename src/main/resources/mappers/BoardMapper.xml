@@ -3,48 +3,59 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.zerock.testw1.mapper.BoardMapper">
-    <insert id="insert" >
+    <insert id="insert">
         <selectKey resultType="int" keyProperty="bno" order="AFTER">
             select last_insert_id()
         </selectKey>
         insert into tbl_board(title, content, writer)
         values(#{title}, #{content}, #{writer})
---         $표 사용은 sql문 인젝션 공격을 당할 위험이 있음
+        -- $표 사용은 sql문 인젝션 공격을 당할 위험이 있음
     </insert>
 
-<!--    parameterType="" 사용 하면 파라미터 받을 수 있지만 무조건 1개만 된다 이름은 아무거나됨 #{aa}  -->
+    <!--    parameterType="" 사용 하면 파라미터 받을 수 있지만 무조건 1개만 된다 이름은 아무거나됨 #{aa}  -->
     <select id="selectList" resultType="org.zerock.testw1.domain.Board">
         select bno,title,
-               content,
-               writer,
-               regDate,
-               updateDate
+        content,
+        writer,
+        regDate,
+        updateDate
         from tbl_board
+        <where>
+            <if test="keyword != null">
+                <foreach collection="types" item="item">
+                    <if test='item == "t" '>
+                        title like concat('%', #{keyword}, '%')
+                    </if>
+                </foreach>
+            </if>
+        </where>
 
-        <foreach collection="types" item="item">
-            #{item}
-        </foreach>
 
         order by bno desc
         limit #{skip}, #{size}
     </select>
 
     <select id="getTotal" resultType="int">
-        select count (bno) from tbl_board
+        select count(bno)
+        from tbl_board
     </select>
 
     <delete id="delete">
-        delete from tbl_board where bno = #{bno}
+        delete
+        from tbl_board
+        where bno = #{bno}
     </delete>
 
     <select id="selectOne" resultType="org.zerock.testw1.domain.Board">
-        select * from tbl_board where bno = #{bno}
+        select *
+        from tbl_board
+        where bno = #{bno}
     </select>
 
     <update id="update">
         update tbl_board
-        set title = #{title},
-            content =#{content},
+        set title      = #{title},
+            content    =#{content},
             updateDate = now()
         where bno = #{bno}
     </update>

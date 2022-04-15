@@ -13,21 +13,31 @@
     </insert>
 
 <!--    parameterType="" 사용 하면 파라미터 받을 수 있지만 무조건 1개만 된다 이름은 아무거나됨 #{aa}  -->
-    <select id="selectList" resultType="Board">
+    <select id="selectList" resultType="org.zerock.testw1.domain.Board">
         select bno,title,
                content,
-               writer
+               writer,
+               regDate,
+               updateDate
         from tbl_board
+
+        <foreach collection="types" item="item">
+            #{item}
+        </foreach>
+
         order by bno desc
         limit #{skip}, #{size}
+    </select>
+
+    <select id="getTotal" resultType="int">
+        select count (bno) from tbl_board
     </select>
 
     <delete id="delete">
         delete from tbl_board where bno = #{bno}
     </delete>
 
-
-    <select id="selectOne" resultType="Board">
+    <select id="selectOne" resultType="org.zerock.testw1.domain.Board">
         select * from tbl_board where bno = #{bno}
     </select>
 

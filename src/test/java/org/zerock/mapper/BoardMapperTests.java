@@ -41,9 +41,9 @@ public class BoardMapperTests {
 
         ListDTO listDTO = new ListDTO();
 
-        listDTO.setType("tcw");
+        listDTO.setType("t");
 
-        //listDTO.setKeyword("11");
+        listDTO.setKeyword("11");
 
         List<Board> boardList = boardMapper.selectList(listDTO);
 

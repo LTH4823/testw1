@@ -14,14 +14,28 @@
 </head>
 <body>
 
-
 <%--    <h1>${pageMaker}</h1>--%>
+
+<h1>${listDTO}</h1>
+
+
+<hr/>
+
+<h3>${listDTO.link}</h3>
+
+
+<ul>
+    <c:forEach items="${dtoList}" var="board">
+        <li>
+            <span> ${board.bno} </span>
+            <span><a href='/board/read${listDTO.link}&bno=${board.bno}'> ${board.title}</a></span>
+        </li>
+    </c:forEach>
+</ul>
+
 
 <%--    <h1>${dtoList}</h1>--%>
 
-    <c:forEach items="${dtoList}" var="boardDTO">
-        <li class="list-group-item">${boardDTO.bno}-----${boardDTO.title}</li>
-    </c:forEach>
 
     <script>
         const result = '${result}' // == null? '': result

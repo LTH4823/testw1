@@ -2,11 +2,13 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.zerock.testw1.mapper.BoardMapper">
-    <sql id = "search">
+
+<mapper namespace="org.zerock.boardtest.mapper.BoardMapper">
+
+    <sql id="search">
         <where>
             <if test="keyword != null">
-                <foreach collection="types" item="item" separator="OR" open="(" close=")">
+                <foreach collection="types" item="item" separator=" OR " open="(" close=")">
                     <if test='item == "t"'>
                         title like concat('%', #{keyword}, '%')
                     </if>
@@ -26,29 +28,28 @@
         <selectKey resultType="int" keyProperty="bno" order="AFTER">
             select last_insert_id()
         </selectKey>
-        insert into tbl_board(title, content, writer)
-        values(#{title}, #{content}, #{writer})
-        -- $표 사용은 sql문 인젝션 공격을 당할 위험이 있음
+        insert into tbl_board (title, content, writer)
+        values(#{title},#{content},#{writer})
     </insert>
 
-    <!--    parameterType="" 사용 하면 파라미터 받을 수 있지만 무조건 1개만 된다 이름은 아무거나됨 #{aa}  -->
-    <select id="selectList" resultType="org.zerock.testw1.domain.Board">
-        select bno,title,
-        content,
-        writer,
-        regDate,
-        updateDate
-        from tbl_board
+    <!--page maker에 사용할 총 숫자값 부름 *이런 식으로 하나 하나 sql 추가해서 부르는게 아닌 한번에 하는 방법 고민?-->
+    <select id="getTotal" resultType="int">
+        select count(bno) from tbl_board
         <include refid="search"></include>
-        order by bno desc
-        limit #{skip}, #{size}
     </select>
 
-    <select id="getTotal" resultType="int">
-        select count(bno)
+    <!--    parameterType 사용 시 1개의 값만 사용됨-->
+    <!--    param1, param2 식으로 각각 넣는 법 있음 단 이방법은 해깔릴 수 있음-->
+    <select id="selectList"  resultType="Board">
+        select bno,title,content,writer,regDate,updateDate
         from tbl_board
+
         <include refid="search"></include>
+
+        order by bno desc
+        limit #{skip},#{size}
     </select>
+
 
     <delete id="delete">
         delete
@@ -56,7 +57,7 @@
         where bno = #{bno}
     </delete>
 
-    <select id="selectOne" resultType="org.zerock.testw1.domain.Board">
+    <select id="selectOne" resultType="Board">
         select *
         from tbl_board
         where bno = #{bno}
@@ -65,7 +66,7 @@
     <update id="update">
         update tbl_board
         set title      = #{title},
-            content    =#{content},
+            content    = #{content},
             updateDate = now()
         where bno = #{bno}
     </update>

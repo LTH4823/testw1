@@ -4,6 +4,6 @@
     <title>Title</title>
 </head>
 <body>
-        <h1>여기에 아무것도 없습니다. </h1>
+    <h1>404 page 내용 없음</h1>
 </body>
 </html>

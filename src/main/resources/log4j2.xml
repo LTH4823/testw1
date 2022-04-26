@@ -18,7 +18,7 @@
             <appender-ref ref="console" />
         </logger>
 
-        <logger name="org.zerock.testw1.mapper" level="TRACE" additivity="false">
+        <logger name="org.zerock.boardtest.mapper" level="TRACE" additivity="false">
             <appender-ref ref="console" />
         </logger>
 

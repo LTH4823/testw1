@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Tables</title>
+    <title>Board Test</title>
 
     <!-- Custom fonts for this template -->
     <link href="http://106.241.252.54:8089/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">

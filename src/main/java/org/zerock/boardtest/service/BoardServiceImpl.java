@@ -26,9 +26,9 @@ public class BoardServiceImpl implements BoardService{
         List<Board> boardList = boardMapper.selectList(listDTO); //.getSkip(),listDTO.getSize()
 
         // vo -> dto 타입으로 변화 추가
-       List<BoardDTO> dtoList =
-               boardList.stream().map(board -> modelMapper.map(board, BoardDTO.class))
-                       .collect(Collectors.toList());
+        List<BoardDTO> dtoList =
+                boardList.stream().map(board -> modelMapper.map(board, BoardDTO.class))
+                        .collect(Collectors.toList());
 
 
         return ListResponseDTO.<BoardDTO>builder()
@@ -48,14 +48,22 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
+    public void insert(BoardDTO boardDTO) {
+        boardMapper.insert(Board.builder()
+                .title(boardDTO.getTitle())
+                .content(boardDTO.getContent())
+                .writer(boardDTO.getWriter())
+                .build());
+    }
+
+    @Override
     public void update(BoardDTO boardDTO) {
 
         boardMapper.update(Board.builder()
-                        .bno(boardDTO.getBno())
-                        .title(boardDTO.getTitle()).
-                        content(boardDTO.getContent())
+                .bno(boardDTO.getBno())
+                .title(boardDTO.getTitle()).
+                content(boardDTO.getContent())
                 .build());
-
     }
 
     @Override

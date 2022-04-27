@@ -235,12 +235,7 @@
     <!-- Begin Page Content -->
     <div class="container-fluid">
 
-        <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-        <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
-            For more information about DataTables, please visit the <a target="_blank"
-                                                                       href="https://datatables.net">official DataTables
-                documentation</a>.</p>
+        <button type="button" class="btn btn-outline-primary"><a href="/board/register">Add</a></button>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -287,21 +282,25 @@
                         <div class="col-sm-12 col-md-7">
                             <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
                                 <ul class="pagination">
-                                    <li class="paginate_button page-item" id="dataTable_previous">
-                                        <a class="page-link" href="#" aria-label="Previous" >
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
 
+                                    <c:if test="${pageMaker.prev}">
+                                        <li class="paginate_button page-item" id="dataTable_previous">
+                                            <a class="page-link" href="${pageMaker.start-1}" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                    </c:if>
                                     <c:forEach begin="${pageMaker.start}" end="${pageMaker.end}" var="num">
-                                        <li class="paginate_button page-item"><a class="page-link" href="${num}">${num}</a></li>
+                                        <li class="paginate_button page-item"><a class="page-link"
+                                                                                 href="${num}">${num}</a></li>
                                     </c:forEach>
-
-                                    <li class="paginate_button page-item" id="dataTable_next">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
+                                    <c:if test="${pageMaker.next}">
+                                        <li class="paginate_button page-item" id="dataTable_next">
+                                            <a class="page-link" href="${pageMaker.end+1}" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </c:if>
                                 </ul>
                             </div>
                         </div>
@@ -344,19 +343,6 @@
 
 
     ${pageMaker}
-
-<%--    <style>--%>
-
-<%--        .pagination {--%>
-<%--            display: flex;--%>
-<%--        }--%>
-
-<%--        .pagination .page-item {--%>
-<%--            margin: 0.3em;--%>
-<%--            list-style: none;--%>
-<%--        }--%>
-
-<%--    </style>--%>
 
 
     <%--    <div class="col-sm-12 col-md-7">--%>

@@ -20,21 +20,23 @@ public class ReplyController {
     private final ReplyService replyService;
 
     @PostMapping("/")
-    public Map<String, Integer> register(@RequestBody ReplyDTO replyDTO){
+    public Map<String,String> register(@RequestBody ReplyDTO replyDTO){
         log.info("=========================");
         log.info(replyDTO);
-        return Map.of("result", 135);
+
+        replyService.register(replyDTO);
+
+        return Map.of("result", "success");
     }
 
     @GetMapping("/test")
-    public String[] get(){
-        return new String[]{"aaa","bbb","bvvv"};
+    public String[] get1() {
+        return new String[]{"AAA","BBB","CCC"};
     }
 
-    @GetMapping(value = "/list/{bno}", produces = MediaType.APPLICATION_PROBLEM_JSON_VALUE)// 이 링크로는 어떤 형식의 값이 나올수 잇다
-    //produces = MediaType.APPLICATION_PROBLEM_JSON_VALUE >> Json만 만들거여
+    @GetMapping(value = "/list/{bno}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReplyDTO> getListOfBoard(@PathVariable("bno") Integer bno){
+
         return replyService.getListOfBoard(bno);
     }
-
 }

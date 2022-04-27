@@ -17,4 +17,8 @@ public interface BoardMapper extends GenericMapper<Board, Integer> {
 //
 //    void update(Board board);
 
+    void updateReplyCount(@Param("bno") Integer bno,@Param("amount") int amount);
+
+
+
 }

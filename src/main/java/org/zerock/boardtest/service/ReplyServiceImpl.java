@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.zerock.boardtest.domain.Reply;
 import org.zerock.boardtest.dto.ReplyDTO;
+import org.zerock.boardtest.mapper.BoardMapper;
 import org.zerock.boardtest.mapper.ReplyMapper;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public class ReplyServiceImpl implements ReplyService{
 
     private final ReplyMapper replyMapper;
     private final ModelMapper modelMapper;
+    private final BoardMapper boardMapper;
+
 
     @Override
     public List<ReplyDTO> getListOfBoard(Integer bno) {
@@ -28,5 +31,12 @@ public class ReplyServiceImpl implements ReplyService{
                 .collect(Collectors.toList());
 
         return dtoList;
+    }
+
+    @Override
+    public void register(ReplyDTO replyDTO) {
+        Reply reply = modelMapper.map(replyDTO, Reply.class);
+        replyMapper.insert(reply);
+        boardMapper.updateReplyCount(replyDTO.getBno(), 1);
     }
 }

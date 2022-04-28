@@ -251,7 +251,8 @@
                             <th>Bno</th>
                             <th>Title</th>
                             <th>Content</th>
-                            <%--                        <th>Writer</th>--%>
+                                                    <th>Writer</th>
+                            <th>ReplyCount</th>
                             <%--                        <th>RegDate</th>--%>
                             <%--                        <th>UpdateDate</th>--%>
                         </tr>
@@ -266,7 +267,12 @@
                                 <td>${board.bno}</td>
                                 <td><a href='/board/read/${board.bno}' class="dtoLink"> <c:out
                                         value="${board.title}"></c:out></a></td>
-                                <td>${board.content}</td>
+                                <td><c:out
+                                        value="${board.content}"></c:out></td>
+                                <td><c:out
+                                        value="${board.writer}"></c:out></td>
+                                <td><c:out
+                                        value="${board.replyCount}"></c:out></td>
                             </tr>
                         </c:forEach>
                         </tbody>

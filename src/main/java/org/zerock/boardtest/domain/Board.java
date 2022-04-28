@@ -14,6 +14,7 @@ public class Board {
     private String title;
     private String content;
     private String writer;
+    private int replyCount;
 
     private LocalDate regDate;
     private LocalDate updateDate;

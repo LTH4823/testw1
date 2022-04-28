@@ -42,70 +42,37 @@
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+<script src="/resources/js/reply.js"></script>
+
 <script>
+
+
     const bno = ${dto.bno}
-        document.querySelector(".addReplyBtn").addEventListener("click", (e) => {
-            const replyTextInput = document.querySelector("input[name='replyText']")
-            const replyerInput = document.querySelector("input[name='replyer']")
+    const replyUL = qs(".replyUL")
+    const replyCount = ${dto.replyCount}
 
-            const replyText = replyTextInput.value
-            const replyer = replyerInput.value
-
-            const reply = {bno,replyText,replyer}
-
-            console.log(reply)
-
-            sendPost(reply)
-
-
-        }, false)
-
-    async function sendPost(reply){
-
-        const res = await axios.post(`/replies/`, reply)
-
-        console.log(res)
-
-    }
-
-
-    async function getReplyList(bno) {
-
-        try {
-            const res = await axios.get(`/replies/list/${bno}`)
-
-            const data = res.data
-
-            return data
-        } catch (err) {
-            return err
+        function getServerList() {
+            replyService.getList({bno}, (replyArr) => {
+                const liArr = replyArr.map(reply => `<li>\${reply.rno}</li>`)
+                replyUL.innerHTML = liArr.join(" ")
+            })
         }
 
+    function addServerReply(){
+        replyService.addReply(
+            {bno:bno,
+                replyText: qs("input[name='replyText']").value ,
+                replyer:qs("input[name='replyText']").value },
+            ()=> {
+                getServerList()
+            }
+        )
     }
 
-
-    getReplyList(bno)
-        .then(arr => {
-
-            const liStr = arr.map(replyDTO => `<li>\${replyDTO.rno}-- \${replyDTO.replyText}</li>`).join(" ")
-
-            document.querySelector(".replyUL").innerHTML = liStr
-        })
-        .catch(err => console.log(err))
-
-
-    document.querySelector(".listBtn").addEventListener("click", (e) => {
-
-        self.location = `/board/list${listDTO.link}`
-
-    }, false)
-
-    document.querySelector(".modBtn").addEventListener("click", (e) => {
-
-        self.location = `/board/modify/${bno}${listDTO.link}`
-    }, false)
+    qsAddEvent(".addReplyBtn","click", addServerReply)
 
 </script>
+
 
 </body>
 </html>

@@ -6,12 +6,19 @@
 <mapper namespace="org.zerock.boardtest.mapper.ReplyMapper">
 
     <select id="selectListOfBoard" resultType="Reply">
-        select * from tbl_reply where bno = #{bno} and rno > 0 order by rno asc
+        select * from tbl_reply where bno = #{bno} and rno > 0 order by rno
+        asc limit #{listDTO.skip}, #{listDTO.size}
     </select>
 
     <insert id="insert">
         insert into tbl_reply(bno, replyText, replyer)
         values(#{bno},#{replyText},#{replyer})
     </insert>
+
+    <select id="selectTotalOfBoard" resultType="int">
+        select count (rno)
+        from tbl_reply where bno = #{bno} and rno > 0
+    </select>
+
 
 </mapper>

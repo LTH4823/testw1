@@ -12,4 +12,6 @@ public interface ReplyService {
     List<ReplyDTO> getListOfBoard(Integer bno, ListDTO listDTO);
 
     int register(ReplyDTO replyDTO);
+
+    void remove(Integer rno);
 }

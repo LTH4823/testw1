@@ -42,4 +42,16 @@ public class ReplyController {
 
         return replyService.getListOfBoard(bno, listDTO);
     }
+
+    @DeleteMapping("/{rno}")
+    public Map<String, String> remove(@PathVariable("rno") Integer rno){
+
+        log.info("=================================");
+
+        log.info("remove..." + rno);
+
+        replyService.remove(rno);
+
+        return Map.of("result", "success");
+    }
 }

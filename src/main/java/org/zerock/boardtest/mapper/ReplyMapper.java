@@ -12,4 +12,5 @@ public interface ReplyMapper extends GenericMapper<Reply,Integer>{
 
     int selectTotalOfBoard(Integer bno);
 
+    void updateAsRemoved(Integer rno);
 }

@@ -8,9 +8,38 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-  <title>Title</title>
+    <title>Title</title>
 </head>
 <body>
+
+
+<div>
+    <div>
+        <input type="text" name="replyText" value="샘플 댓글">
+    </div>
+    <div>
+        <input type="text" name="replyer" value="testUser">
+    </div>
+    <div>
+        <button class="addReplyBtn">댓글 추가</button>
+    </div>
+</div>
+
+
+<div>
+    <h1>댓글 수정 모달 </h1>
+    <div>
+        <input type="text" name="modReplyText" >
+    </div>
+    <div>
+        <input type="text" name="modReplyer" readonly>
+    </div>
+    <div>
+        <button class="modReplyBtn">댓글 수정</button>
+        <button class="removeReplyBtn">댓글 삭제</button>
+    </div>
+</div>
+
 
 <ul class="replyUL">
 
@@ -25,122 +54,199 @@
 <script>
 
 
-  //---------------------------------------------------------
+    //---------------------------------------------------------
 
-  let initState = {
-    bno: ${dto.bno},
-    replyArr:[],
-    replyCount:0,
-    size:10,
-    pageNum:1
-  }
-
-  const replyUL = document.querySelector(".replyUL")
-  const pageUL = document.querySelector(".pageUL")
-
-  pageUL.addEventListener("click",(e) => {
-    if(e.target.tagName != 'LI'){
-      return
-    }
-    const dataNum = parseInt(e.target.getAttribute("data-num"))
-    replySerivce.setState({pageNum:dataNum})
-
-  }, false)
-
-
-  function render(obj){
-
-    console.log("render................")
-    console.dir(obj)
-
-    function printList(){
-      const arr = obj.replyArr
-
-      replyUL.innerHTML = arr.map(reply => `<li>\${reply.rno}</li>`).join(" ")
+    let initState = {
+        bno: ${dto.bno},
+        replyArr:[],
+        replyCount:0,
+        size:10,
+        pageNum:1
     }
 
-    function printPage(){
+    const replyUL = document.querySelector(".replyUL")
+    const pageUL = document.querySelector(".pageUL")
 
-      const currentPage = obj.pageNum
-      const size = obj.size
+    pageUL.addEventListener("click",(e) => {
+        if(e.target.tagName != 'LI'){
+            return
+        }
+        const dataNum = parseInt(e.target.getAttribute("data-num"))
+        replySerivce.setState({pageNum:dataNum})
 
-      let endPage = Math.ceil(currentPage/10) * 10
-      const startPage = endPage - 9
-      const prev = startPage != 1
+    }, false)
 
-      endPage = obj.replyCount < endPage * obj.size? Math.ceil(obj.replyCount/obj.size) : endPage
+    document.querySelector(".addReplyBtn").addEventListener("click",(e)=> {
 
-      const next = obj.replyCount > endPage * obj.size
+        const replyObj = {
+            bno: ${dto.bno},
+            replyText: document.querySelector("input[name='replyText']").value,
+            replyer:document.querySelector("input[name='replyer']").value
+        }
 
-      console.log("startPage", startPage, "endPage", endPage, "currentPage", currentPage)
+        replySerivce.addServerReply(replyObj)
 
-      let str = ''
+    }, false)
 
-      if(prev){
-        str += `<li data-num=\${startPage-1}>이전</li>`
-      }
+    const modReplyTextInput = document.querySelector("input[name='modReplyText']")
+    const modReplyerInput = document.querySelector("input[name='modReplyer']")
+    const removeReplyBtn = document.querySelector(".removeReplyBtn")
 
-      for(let i = startPage; i <= endPage; i++){
-        str += `<li  data-num=\${i}>\${i}</li>`
-      }
 
-      if(next){
-        str += `<li data-num=\${endPage+1}>다음</li>`
-      }
-      pageUL.innerHTML = str
+    let targetLi;
+
+    replyUL.addEventListener("click", (e) => {
+
+        if(!e.target.getAttribute("data-rno")){
+            return;
+        }
+
+        targetLi = e.target.closest("li")
+        const rno = parseInt(e.target.getAttribute("data-rno"))
+
+        const replyObj = replySerivce.findReply(rno)
+        modReplyTextInput.value = replyObj.replyText
+        modReplyerInput.value = replyObj.replyer
+        removeReplyBtn.setAttribute("data-rno", rno)
+
+    }, false)
+
+    removeReplyBtn.addEventListener("click", (e) => {
+
+        const rno = parseInt(e.target.getAttribute("data-rno"))
+
+        replySerivce.removeServer(rno).then(result => {
+            console.log(targetLi)
+            targetLi.innerHTML ="DELETED"
+        })
+
+    }, false)
+
+
+    function render(obj){
+
+        console.log("render................")
+        console.dir(obj)
+
+        function printList(){
+            const arr = obj.replyArr
+
+            replyUL.innerHTML = arr.map(reply =>
+                `<li>\${reply.rno}
+                                <div> \${reply.replyText}</div>
+                                <button data-rno=\${reply.rno} class='modBtn'>수정</button>
+                            </li>`).join(" ")
+        }
+
+        function printPage(){
+
+            const currentPage = obj.pageNum
+            const size = obj.size
+
+            let endPage = Math.ceil(currentPage/10) * 10
+            const startPage = endPage - 9
+            const prev = startPage != 1
+
+            endPage = obj.replyCount < endPage * obj.size? Math.ceil(obj.replyCount/obj.size) : endPage
+
+            const next = obj.replyCount > endPage * obj.size
+
+            console.log("startPage", startPage, "endPage", endPage, "currentPage", currentPage)
+
+            let str = ''
+
+            if(prev){
+                str += `<li data-num=\${startPage-1}>이전</li>`
+            }
+
+            for(let i = startPage; i <= endPage; i++){
+                str += `<li  data-num=\${i}>\${i}</li>`
+            }
+
+            if(next){
+                str += `<li data-num=\${endPage+1}>다음</li>`
+            }
+            pageUL.innerHTML = str
+        }
+
+        printList()
+        printPage()
+
     }
 
-    printList()
-    printPage()
+    //---------------------------------------------------------
 
-  }
+    const replySerivce = (function(initState, callbackFn){
 
-  //---------------------------------------------------------
+        let state = initState
+        const callback = callbackFn
 
-  const replySerivce = (function(initState, callbackFn){
+        const setState = (newState)=> {
+            state = {...state, ...newState}
+            console.log(state)
 
-    let state = initState
-    const callback = callbackFn
+            //newState안에 replyCount속성이 있다면 혹은 pageNum이 있다면
+            if(newState.replyCount || newState.pageNum){
+                getServerList(newState)
+            }
 
-    const setState = (newState)=> {
-      state = {...state, ...newState}
-      console.log(state)
+            callback(state)
+        }
 
-      //newState안에 replyCount속성이 있다면 혹은 pageNum이 있다면
-      if(newState.replyCount || newState.pageNum){
-        getServerList(newState)
+        async function getServerList(newState){
 
-      }
+            let pageNum
 
-      callback(state)
-    }
+            if(newState.pageNum){
+                pageNum = newState.pageNum
+            }else{
+                pageNum = Math.ceil(state.replyCount/state.size)
+            }
 
-    async function getServerList(newState){
+            const paramObj = {page:pageNum, size:state.size}
 
-      let pageNum = Math.ceil(state.replyCount/state.size)
+            const res = await axios.get(`/replies/list/\${state.bno}`,{params: paramObj } )
 
-      if (newState.pageNum){
-        pageNum = newState.pageNum
-      }else {
-        pageNum =  Math.ceil(state.replyCount/state.size)
-      }
+            console.log(res.data)
 
-      const paramObj = {page:pageNum, size:state.size}
+            state.pageNum = pageNum
+            setState({replyArr: res.data})
 
-      const res = await axios.get(`/replies/list/\${state.bno}`,{params: paramObj } )
+        }
 
-      console.log(res.data)
+        async function addServerReply(replyObj){
 
-      state.pageNum = pageNum
-      setState({replyArr: res.data})
+            const res = await axios.post(`/replies/`, replyObj)
 
-    }
+            const data = res.data
 
+            console.log("addReplyResult",data)
 
-    return {setState}
-  })(initState, render)
+            setState({replyCount: data.result})
 
-  replySerivce.setState({replyCount:${dto.replyCount}})
+        }
+
+        function findReply(rno){
+
+            return state.replyArr.find(reply => reply.rno === rno)
+
+        }
+
+        async function removeServer(rno){
+
+            const res = await axios.delete(`/replies/\${rno}`)
+
+            //success
+            const result = res.data.result
+
+            return result
+
+        }
+
+        return {setState, addServerReply, findReply, removeServer}
+    })(initState, render)
+
+    replySerivce.setState({replyCount:${dto.replyCount}})
 
 
 

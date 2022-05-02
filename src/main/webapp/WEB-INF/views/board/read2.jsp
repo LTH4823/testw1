@@ -108,15 +108,22 @@
 
       //newState안에 replyCount속성이 있다면 혹은 pageNum이 있다면
       if(newState.replyCount || newState.pageNum){
-        getServerList()
+        getServerList(newState)
+
       }
 
       callback(state)
     }
 
-    async function getServerList(){
+    async function getServerList(newState){
 
-      const pageNum = Math.ceil(state.replyCount/state.size)
+      let pageNum = Math.ceil(state.replyCount/state.size)
+
+      if (newState.pageNum){
+        pageNum = newState.pageNum
+      }else {
+        pageNum =  Math.ceil(state.replyCount/state.size)
+      }
 
       const paramObj = {page:pageNum, size:state.size}
 

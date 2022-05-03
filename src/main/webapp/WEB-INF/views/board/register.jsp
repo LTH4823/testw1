@@ -25,40 +25,49 @@
 
 <div>
     <h2>Ajax Upload</h2>
-    <input type="file" name="upload" multiple class="uploadFile">
+    <div class="uploadInputDiv">
+        <input type="file" name="upload" multiple class="uploadFile">
+    </div>
     <button class="uploadBtn">UPLOAD</button>
 </div>
 
-<div class="uploadResult">
-</div>
-
 <style>
-    .uploadResult{
+    .uploadResult {
         display: flex;
-        flex-direction: column;
+
     }
-    .uploadResult>div{
+    .uploadResult > div {
         margin: 3em;
         border: 1px solid red;
     }
 </style>
+
+<div class="uploadResult">
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
 
     const uploadResult = document.querySelector(".uploadResult")
 
-    uploadResult.addEventListener("click", (e)=>{
+    const cloneInput = document.querySelector(".uploadFile").cloneNode()
 
-        if(e.target.getAttribute("class").indexOf("delBtn")<0){
+
+    uploadResult.addEventListener("click", (e) => {
+
+        if(e.target.getAttribute("class").indexOf("delBtn") < 0){
             return
         }
+        const btn = e.target
+        const link = btn.getAttribute("data-link")
 
-        const link = e.target.getAttribute("data-link")
+        deleteToServer(link).then(result => {
+            btn.closest("div").remove()
+        })
 
-        alert(link)
-
-    },false)
+    }, false)
 
     document.querySelector(".uploadBtn").addEventListener("click",(e)=> {
 
@@ -75,17 +84,31 @@
             formObj.append("files", files[i])
         }
 
+
+
         uploadToServer(formObj).then(resultArr => {
 
-            uploadResult.innerHTML = resultArr.map(result => `<div>
+            uploadResult.innerHTML += resultArr.map(result => `<div>
                 <img src='/view?fileName=\${result.thumbnail}'>
                 <button data-link='\${result.link}' class="delBtn">x</button>
                 \${result.original}</div>`).join(" ")
+
+            fileInput.remove()
+            document.querySelector(".uploadInputDiv").appendChild(cloneInput.cloneNode())
 
         })
 
     }, false)
 
+    async function deleteToServer(fileName){
+        const options = {headers: { "Content-Type": "application/x-www-form-urlencoded"}}
+
+        const res = await axios.post("/delete", "fileName="+fileName, options )
+
+        console.log(res.data)
+
+        return res.data
+    }
 
     async function uploadToServer (formObj) {
 

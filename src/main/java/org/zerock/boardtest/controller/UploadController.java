@@ -15,10 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @Log4j2
@@ -49,6 +46,30 @@ public class UploadController {
             return ResponseEntity.status(404).build();
         }
 
+
+    }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public Map<String,String> deleteFile(String fileName){
+
+        int idx = fileName.lastIndexOf("/");
+        String path = fileName.substring(0,idx);
+        String name = fileName.substring(idx+1);
+        log.info("path: " + path);
+        log.info("name: "+ name);
+
+        File targetFile = new File("C:\\upload\\"+fileName);
+
+        boolean result = targetFile.delete();
+
+        //thumbnail
+        if(result){
+            File thumbFile = new File("C:\\upload\\"+path+"\\s_"+name);
+            thumbFile.delete();
+        }
+
+        return Map.of("result", "success");
 
     }
 

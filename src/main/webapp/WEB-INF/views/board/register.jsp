@@ -1,28 +1,20 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--
+  Created by IntelliJ IDEA.
+  User: cooki
+  Date: 2022-04-13
+  Time: 오후 12:56
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Title</title>
 </head>
 <body>
-<h1>register</h1>
-<%--<form action="/board/register" method="post">--%>
-<%--    <input type="text" name="title">--%>
-<%--    <button>submit</button>--%>
-<%--</form>--%>
+<h1>Register Page</h1>
 <form action="/board/register" method="post">
-    <div>
-        <div>
-            <input type="text" name="writer" placeholder="작성자를 입력하세요." value="<c:out value="${dto.writer}"/>">
-        </div>
-        <div>
-            <input type="text" name="title" placeholder="제목을 입력하세요." value="<c:out value="${dto.title}"/>">
-        </div>
-        <div>
-            <textarea name="content" placeholder="내용 입력하세요."><c:out value="${dto.content}"/></textarea>
-        </div>
-    </div>
-    <button>등록</button>
+    <input type="text" name="title">
+    <button>CLICK</button>
 </form>
 
 <h2>파일 업로드 테스트</h2>
@@ -37,9 +29,36 @@
     <button class="uploadBtn">UPLOAD</button>
 </div>
 
+<div class="uploadResult">
+</div>
+
+<style>
+    .uploadResult{
+        display: flex;
+        flex-direction: column;
+    }
+    .uploadResult>div{
+        margin: 3em;
+        border: 1px solid red;
+    }
+</style>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
+
+    const uploadResult = document.querySelector(".uploadResult")
+
+    uploadResult.addEventListener("click", (e)=>{
+
+        if(e.target.getAttribute("class").indexOf("delBtn")<0){
+            return
+        }
+
+        const link = e.target.getAttribute("data-link")
+
+        alert(link)
+
+    },false)
 
     document.querySelector(".uploadBtn").addEventListener("click",(e)=> {
 
@@ -56,7 +75,14 @@
             formObj.append("files", files[i])
         }
 
-        uploadToServer(formObj)
+        uploadToServer(formObj).then(resultArr => {
+
+            uploadResult.innerHTML = resultArr.map(result => `<div>
+                <img src='/view?fileName=\${result.thumbnail}'>
+                <button data-link='\${result.link}' class="delBtn">x</button>
+                \${result.original}</div>`).join(" ")
+
+        })
 
     }, false)
 
@@ -77,7 +103,6 @@
 
         return response.data
     }
-
 
 </script>
 

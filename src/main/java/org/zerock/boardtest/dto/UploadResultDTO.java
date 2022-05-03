@@ -16,4 +16,11 @@ public class UploadResultDTO {
     private String savePath;
     private boolean img;
 
+    public String getLink(){
+        return savePath+"/"+uuid+"_"+original;
+    }
+    public String getThumbnail(){
+        return savePath+"/s_"+uuid+"_"+original;
+    }
+
 }

@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 
 @Controller
 @Log4j2
@@ -24,12 +28,16 @@ public class UploadController {
 
        //업로드된 파일 있다고 가정
         for (MultipartFile file:files) {
-            log.info(file.getOriginalFilename());
+
+            String originalFileName = file.getOriginalFilename();
+
+            String saveName = UUID.randomUUID().toString()+"_"+originalFileName;
+
             log.info(file.getResource());
-            log.info("---------------------------");
+            String saveFolder = makeFolders();
 
             try(InputStream in = file.getInputStream();
-                FileOutputStream fos = new FileOutputStream("C:\\upload\\"+file.getOriginalFilename());
+                FileOutputStream fos = new FileOutputStream("C:\\upload\\"+saveFolder+"\\"+saveName);
                 ){FileCopyUtils.copy(in,fos);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -37,4 +45,20 @@ public class UploadController {
 
         }//emd for
     }
+    private String makeFolders(){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+
+        String str = sdf.format(new java.util.Date());
+
+        File folderPath = new File("C:\\upload\\" + str);
+
+        if(!folderPath.exists()){
+            folderPath.mkdirs();
+        }
+
+        return str;
+
+    }
+
 }

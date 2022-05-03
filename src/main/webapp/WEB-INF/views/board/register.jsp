@@ -13,13 +13,13 @@
 <form action="/board/register" method="post">
     <div>
         <div>
-            <input type="text" name="writer" placeholder="작성자를 입력하세요." value="<c:out value="${dto.writer}"/>" >
+            <input type="text" name="writer" placeholder="작성자를 입력하세요." value="<c:out value="${dto.writer}"/>">
         </div>
         <div>
-            <input type="text" name="title" placeholder="제목을 입력하세요." value="<c:out value="${dto.title}"/>" >
+            <input type="text" name="title" placeholder="제목을 입력하세요." value="<c:out value="${dto.title}"/>">
         </div>
         <div>
-            <textarea name="content" placeholder="내용 입력하세요." ><c:out value="${dto.content}"/></textarea>
+            <textarea name="content" placeholder="내용 입력하세요."><c:out value="${dto.content}"/></textarea>
         </div>
     </div>
     <button>등록</button>
@@ -30,6 +30,56 @@
     <input type="file" name="files" multiple>
     <button>Upload</button>
 </form>
+
+<div>
+    <h2>Ajax Upload</h2>
+    <input type="file" name="upload" multiple class="uploadFile">
+    <button class="uploadBtn">UPLOAD</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+
+    document.querySelector(".uploadBtn").addEventListener("click",(e)=> {
+
+        const formObj = new FormData();
+
+        const fileInput = document.querySelector(".uploadFile")
+
+        console.log(fileInput.files)
+
+        const files = fileInput.files
+
+        for (let i = 0; i < files.length; i++) {
+            console.log(files[i])
+            formObj.append("files", files[i])
+        }
+
+        uploadToServer(formObj)
+
+    }, false)
+
+
+    async function uploadToServer (formObj) {
+
+        console.log("upload to server......")
+        console.log(formObj)
+
+        const response = await axios({
+            method: 'post',
+            url: '/upload1',
+            data: formObj,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        return response.data
+    }
+
+
+</script>
 
 </body>
 </html>

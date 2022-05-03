@@ -25,8 +25,11 @@
     <button>등록</button>
 </form>
 
-
-
+<h2>파일 업로드 테스트</h2>
+<form action="/upload1" method="post" enctype="multipart/form-data">
+    <input type="file" name="files" multiple>
+    <button>Upload</button>
+</form>
 
 </body>
 </html>

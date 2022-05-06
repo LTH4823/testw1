@@ -3,6 +3,7 @@ package org.zerock.boardtest.domain;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -15,7 +16,8 @@ public class Board {
     private String content;
     private String writer;
     private int replyCount;
+    private String mainImage;
 
-    private LocalDate regDate;
-    private LocalDate updateDate;
+    private LocalDateTime regDate;
+    private LocalDateTime updateDate;
 }

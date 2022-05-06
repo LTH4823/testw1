@@ -9,6 +9,18 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/includes/header.jsp" %>
+<style>
+    .dtoList {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .dtoList li {
+        width: 20vw;
+        min-width: 250px;
+        border: 1px solid blue;
+    }
+
+</style>
 <div id="content">
     <!-- Topbar -->
     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -19,6 +31,22 @@
                 <i class="fa fa-bars"></i>
             </button>
         </form>
+
+
+        <ul class="dtoList">
+            <c:forEach items="${dtoList}" var="board">
+                <li>
+                    <c:if test="${board.mainImage != null}">
+                        <img src='${board.mainImage}'>
+                    </c:if>
+                    <span> ${board.bno} </span>
+                    <span><a href='/board/read/${board.bno}' class="dtoLink">
+            <c:out value="${board.title}"/>  </a>
+            [ <c:out value="${board.replyCount}"/> ]
+        </span>
+                </li>
+            </c:forEach>
+        </ul>
 
         <!-- Topbar Search -->
         <form

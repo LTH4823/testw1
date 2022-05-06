@@ -1,17 +1,31 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: cooki
-  Date: 2022-05-02
-  Time: 오전 9:35
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
     <title>Title</title>
 </head>
 <body>
 
+<div>
+    <c:if test="${dto.mainImage != null}">
+        <img src="${dto.mainImage}"/>
+    </c:if>
+
+    <style>
+        .pictures img {
+            max-width: 80vw;
+        }
+    </style>
+
+    <button class="moreBtn">더보기</button>
+    <div class="pictures">
+        <c:if test="${dto.mainImage != null}">
+            <img src="${dto.getMain()}">
+        </c:if>
+    </div>
+
+</div>
 
 <div>
     <div>
@@ -51,6 +65,28 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+    document.querySelector(".moreBtn").addEventListener("click", (e) => {
+
+        axios.get("/board/files/${dto.bno}").then(
+            res => {
+                console.log(res.data)
+                const arr = res.data
+                let str= ""
+                for(let i= 0;i < arr.length; i++){
+                    str += `<img src='/view?fileName=\${arr[i].link}'>`
+                }
+                console.log(str)
+                document.querySelector(".pictures").innerHTML = str
+            }
+        )
+
+    }, false)
+
+
+</script>
+
 <script>
 
 

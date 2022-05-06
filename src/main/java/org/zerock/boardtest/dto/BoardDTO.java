@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +18,23 @@ public class BoardDTO {
     private String content;
     private String writer;
     private int replyCount;
+    //mainImage의 섬네일의 링크
+    private String mainImage;
 
     private List<UploadResultDTO> uploads = new ArrayList<>();
 
-    private LocalDate regDate;
-    private LocalDate updateDate;
+    private LocalDateTime regDate;
+    private LocalDateTime updateDate;
+
+    public String getMain(){
+        if(mainImage == null){
+            return null;
+        }
+
+        int idx = mainImage.indexOf("s_");
+        String first = mainImage.substring(0, idx );
+        String second = mainImage.substring(idx+2);
+
+        return first+second;
+    }
 }

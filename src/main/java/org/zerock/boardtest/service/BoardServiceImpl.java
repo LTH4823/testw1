@@ -9,6 +9,7 @@ import org.zerock.boardtest.domain.Board;
 import org.zerock.boardtest.dto.BoardDTO;
 import org.zerock.boardtest.dto.ListDTO;
 import org.zerock.boardtest.dto.ListResponseDTO;
+import org.zerock.boardtest.dto.UploadResultDTO;
 import org.zerock.boardtest.mapper.BoardMapper;
 import org.zerock.boardtest.mapper.FileMapper;
 
@@ -21,37 +22,12 @@ import java.util.stream.Collectors;
 public class BoardServiceImpl implements BoardService{
 
     private final BoardMapper boardMapper;
-    private final ModelMapper modelMapper;
     private final FileMapper fileMapper;
-
-    @Override
-    public ListResponseDTO<BoardDTO> getList(ListDTO listDTO) {
-        List<Board> boardList = boardMapper.selectList(listDTO); //.getSkip(),listDTO.getSize()
-
-        // vo -> dto 타입으로 변화 추가
-        List<BoardDTO> dtoList =
-                boardList.stream().map(board -> modelMapper.map(board, BoardDTO.class))
-                        .collect(Collectors.toList());
-
-
-        return ListResponseDTO.<BoardDTO>builder()
-                .dtoList(dtoList)
-                .total(boardMapper.getTotal(listDTO))
-                .build();
-    }
-
-    @Override
-    public BoardDTO getOne(Integer bno) {
-
-        Board board = boardMapper.selectOne(bno);
-
-        BoardDTO boardDTO =modelMapper.map(board,BoardDTO.class);
-
-        return boardDTO;
-    }
+    private final ModelMapper modelMapper;
 
     @Override
     public void register(BoardDTO boardDTO) {
+
         Board board = modelMapper.map(boardDTO, Board.class);
 
         List<AttachFile> files =
@@ -73,20 +49,83 @@ public class BoardServiceImpl implements BoardService{
         log.info("========================");
 
         log.info("========================");
+
+    }
+
+    @Override
+    public ListResponseDTO<BoardDTO> getList(ListDTO listDTO) {
+
+        List<Board> boardList = boardMapper.selectList(listDTO);
+
+        List<BoardDTO> dtoList =
+                boardList.stream()
+                        .map(board -> modelMapper.map(board, BoardDTO.class))
+                        .collect(Collectors.toList());
+
+        return ListResponseDTO.<BoardDTO>builder()
+                .dtoList(dtoList)
+                .total(boardMapper.getTotal(listDTO))
+                .build();
+    }
+
+    @Override
+    public BoardDTO getOne(Integer bno) {
+
+        Board board = boardMapper.selectOne(bno);
+
+        BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
+
+        return boardDTO;
     }
 
     @Override
     public void update(BoardDTO boardDTO) {
 
+        log.info("==================================================");
+
+        log.info("==================================================");
+
+        log.info(boardDTO);
+
+
+        log.info("==================================================");
+
+        log.info("==================================================");
+
+        //기존 파일들 모두 삭제
+        fileMapper.delete(boardDTO.getMain());
+//
         boardMapper.update(Board.builder()
                 .bno(boardDTO.getBno())
-                .title(boardDTO.getTitle()).
-                content(boardDTO.getContent())
+                .title(boardDTO.getTitle())
+                .content(boardDTO.getContent())
+                .mainImage(boardDTO.getMainImage())
                 .build());
+
+        for (UploadResultDTO uploadDTO : boardDTO.getUploads()) {
+
+            AttachFile attachFile = modelMapper.map(uploadDTO, AttachFile.class);
+            attachFile.setBno(boardDTO.getBno());
+
+            fileMapper.insert(attachFile);
+        }
+
     }
 
     @Override
     public void remove(Integer bno) {
         boardMapper.delete(bno);
     }
+
+    @Override
+    public List<UploadResultDTO> getFiles(Integer bno) {
+
+        List<AttachFile> attachFiles = boardMapper.selectFiles(bno);
+
+        return attachFiles.stream()
+                .map(attachFile -> modelMapper.map(attachFile, UploadResultDTO.class))
+                .collect(Collectors.toList());
+    }
 }
+
+

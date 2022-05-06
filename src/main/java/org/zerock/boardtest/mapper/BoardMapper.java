@@ -1,6 +1,7 @@
 package org.zerock.boardtest.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.zerock.boardtest.domain.AttachFile;
 import org.zerock.boardtest.domain.Board;
 
 import java.util.List;
@@ -19,6 +20,6 @@ public interface BoardMapper extends GenericMapper<Board, Integer> {
 
     void updateReplyCount(@Param("bno") Integer bno,@Param("amount") int amount);
 
-
+    List<AttachFile> selectFiles(Integer bno);
 
 }

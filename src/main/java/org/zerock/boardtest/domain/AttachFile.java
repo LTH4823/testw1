@@ -16,4 +16,8 @@ public class AttachFile {
     private String savePath;
     private boolean img;
 
+    public void setBno(Integer bno){
+        this.bno = bno;
+    }
+
 }

@@ -11,10 +11,13 @@
     <title>Title</title>
 </head>
 <body>
+
 <h1>Register Page</h1>
-<form action="/board/register" method="post">
-    <input type="text" name="title">
-    <button>CLICK</button>
+<form class="actionForm" action="/board/register" method="post">
+    <input type="text" name="title" value="파일업로드 테스트">
+    <input type="text" name="content" value="파일업로드 테스트">
+    <input type="text" name="writer" value="user00">
+    <button class="formBtn">CLICK</button>
 </form>
 
 <h2>파일 업로드 테스트</h2>
@@ -54,6 +57,35 @@
 
     const cloneInput = document.querySelector(".uploadFile").cloneNode()
 
+    document.querySelector(".formBtn").addEventListener("click",(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const divArr = document.querySelectorAll(".uploadResult > div")
+
+        let str = "";
+        for(let i= 0;i < divArr.length; i++){
+            const fileObj = divArr[i]
+
+            const uuid = fileObj.getAttribute("data-uuid")
+            const img = fileObj.getAttribute("data-img")
+            const savePath = fileObj.getAttribute("data-savepath")
+            const fileName = fileObj.getAttribute("data-filename")
+
+            str += `<input type='hidden' name='uploads[\${i}].uuid' value='\${uuid}'>`
+            str += `<input type='hidden' name='uploads[\${i}].img' value='\${img}'>`
+            str += `<input type='hidden' name='uploads[\${i}].savePath' value='\${savePath}'>`
+            str += `<input type='hidden' name='uploads[\${i}].fileName' value='\${fileName}'>`
+        }//for
+
+        const actionForm = document.querySelector(".actionForm")
+        actionForm.innerHTML += str
+
+        actionForm.submit()
+
+
+    },false)
+
 
     uploadResult.addEventListener("click", (e) => {
 
@@ -88,13 +120,14 @@
 
         uploadToServer(formObj).then(resultArr => {
 
-            uploadResult.innerHTML += resultArr.map(result => `<div>
-                <img src='/view?fileName=\${result.thumbnail}'>
-                <button data-link='\${result.link}' class="delBtn">x</button>
-                \${result.fileName}</div>`).join(" ")
+            uploadResult.innerHTML += resultArr.map( ({uuid,thumbnail,link,fileName,savePath, img}) => `
+                <div data-uuid='\${uuid}' data-img='\${img}'  data-filename='\${fileName}'  data-savepath='\${savePath}'>
+                <img src='/view?fileName=\${thumbnail}'>
+                <button data-link='\${link}' class="delBtn">x</button>
+                \${fileName}</div>`).join(" ")
 
             fileInput.remove()
-            document.querySelector(".uploadInputDiv").appendChild(cloneInput.cloneNode())
+            document.querySelector(".uploadInputDiv").appendChild(cloneInput)
 
         })
 

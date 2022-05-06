@@ -9,7 +9,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.boardtest.dto.UploadResultDTO;
-import org.zerock.boardtest.service.FileService;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,8 +23,6 @@ import java.util.*;
 @Log4j2
 @RequiredArgsConstructor
 public class UploadController {
-
-    private final FileService fileService;
 
     @GetMapping("/view")
     public ResponseEntity<byte[]> viewFile(String fileName){
@@ -56,15 +54,18 @@ public class UploadController {
 
     @PostMapping("/delete")
     @ResponseBody
-    public Map<String,String> deleteFile(String fileName){
+    public Map<String, String> deleteFile(String fileName){
 
         int idx = fileName.lastIndexOf("/");
         String path = fileName.substring(0,idx);
-        String name = fileName.substring(idx+1);
-        log.info("path: " + path);
-        log.info("name: "+ name);
+        String name = fileName.substring(idx+1); //uuid_fileName
+        String uuid = name.substring(0,name.indexOf("_"));
 
-        File targetFile = new File("C:\\upload\\"+fileName);
+        log.info("path: "+ path);
+        log.info("name: " + name);
+
+
+        File targetFile = new File("C:\\upload\\" + fileName);
 
         boolean result = targetFile.delete();
 
@@ -74,8 +75,8 @@ public class UploadController {
             thumbFile.delete();
         }
 
-        return Map.of("result", "success");
 
+        return Map.of("result", "success");
     }
 
     @PostMapping("/upload1")
@@ -133,8 +134,9 @@ public class UploadController {
                     .savePath(saveFolder)
                     .build();
 
+
             list.add(uploadResultDTO);
-            fileService.register(uploadResultDTO);
+
 
             log.info("--------------------------");
 

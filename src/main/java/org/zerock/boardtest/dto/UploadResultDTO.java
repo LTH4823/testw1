@@ -8,13 +8,16 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class UploadResultDTO {
 
     private String uuid;
     private String fileName;
     private String savePath;
     private boolean img;
+
+    public UploadResultDTO(){
+
+    }
 
     public String getLink(){
         return savePath+"/"+uuid+"_"+fileName;

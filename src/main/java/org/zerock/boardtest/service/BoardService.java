@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface BoardService {
 
-//    List<BoardDTO> getList(ListDTO listDTO); // 
-    ListResponseDTO<BoardDTO>getList(ListDTO listDTO);
+    //    List<BoardDTO> getList(ListDTO listDTO); //
+    void register(BoardDTO boardDTO);
+
+    ListResponseDTO<BoardDTO> getList(ListDTO listDTO);
 
     BoardDTO getOne(Integer bno);
 
     void update(BoardDTO boardDTO);
 
     void remove(Integer bno);
-
-    void insert(BoardDTO boardDTO);
 
 }

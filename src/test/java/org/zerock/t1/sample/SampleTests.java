@@ -17,6 +17,9 @@ public class SampleTests {
     @Autowired
     private SampleService sampleService;
 
+
+
+
     @Test
     public void test1(){
         log.info(sampleService);

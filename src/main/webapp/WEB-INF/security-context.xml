@@ -5,25 +5,34 @@
        xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="loginFailHandler" class="org.zerock.boardtest.security.handler.CustomLoginFailHandler"></bean>
+
     <security:http>
 
-        <security:form-login />
+        <security:form-login login-page="/customLogin" authentication-failure-handler-ref="loginFailHandler"/>
 
         <security:intercept-url pattern="/sample/all"></security:intercept-url>
         <security:intercept-url pattern="/sample/member" access="hasRole('ROLE_MEMBER')"></security:intercept-url>
         <security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')"></security:intercept-url>
 
+        <security:access-denied-handler error-page="/accessError"></security:access-denied-handler>
+
+        <security:csrf disabled="true"></security:csrf>
 
     </security:http>
 
-    <security:authentication-manager>
-        <security:authentication-provider>
-            <security:user-service>
-                <security:user name="user00" authorities="ROLE_MEMBER" password="$2a$10$Arbv3X9rOeFbv5CnPDCd6umiIszsewHOg31FYxq0vjFDgzwVahh3m"></security:user>
-                <security:user name="admin00" authorities="ROLE_MEMBER, ROLE_ADMIN" password="$2a$10$Arbv3X9rOeFbv5CnPDCd6umiIszsewHOg31FYxq0vjFDgzwVahh3m"></security:user>
-            </security:user-service>
-        </security:authentication-provider>
+    <bean id="customDetails" class="org.zerock.boardtest.security.CustomUserDetailsService">
 
+    </bean>
+
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="customDetails">
+            <security:password-encoder ref="passwordEncoder"></security:password-encoder>
+<!--            <security:user-service>-->
+<!--                <security:user name="user00" authorities="ROLE_MEMBER" password="$2a$10$Arbv3X9rOeFbv5CnPDCd6umiIszsewHOg31FYxq0vjFDgzwVahh3m"></security:user>-->
+<!--                <security:user name="admin00" authorities="ROLE_MEMBER, ROLE_ADMIN" password="$2a$10$Arbv3X9rOeFbv5CnPDCd6umiIszsewHOg31FYxq0vjFDgzwVahh3m"></security:user>-->
+<!--            </security:user-service>-->
+        </security:authentication-provider>
     </security:authentication-manager>
 
 </beans>

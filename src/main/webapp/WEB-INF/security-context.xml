@@ -12,15 +12,15 @@
 
         <security:form-login login-page="/customLogin" authentication-failure-handler-ref="loginFailHandler"/>
 
-        <security:intercept-url pattern="/sample/all"></security:intercept-url>
-        <security:intercept-url pattern="/sample/member" access="hasRole('ROLE_MEMBER')"></security:intercept-url>
-        <security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')"></security:intercept-url>
+<!--        <security:intercept-url pattern="/sample/all"></security:intercept-url>-->
+<!--        <security:intercept-url pattern="/sample/member" access="hasRole('ROLE_MEMBER')"></security:intercept-url>-->
+<!--        <security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')"></security:intercept-url>-->
 
         <security:access-denied-handler error-page="/accessError"></security:access-denied-handler>
 
         <security:csrf disabled="true"></security:csrf>
 
-        <security:remember-me key="12345678"></security:remember-me>
+        <security:remember-me key="12345678" data-source-ref="dataSource"></security:remember-me>
 
     </security:http>
 

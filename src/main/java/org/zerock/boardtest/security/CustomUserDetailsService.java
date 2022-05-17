@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.zerock.boardtest.domain.Smember;
+import org.zerock.boardtest.dto.SmemeberDTO;
 import org.zerock.boardtest.mapper.SmemberMapper;
 
 import java.util.List;
@@ -39,8 +40,10 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .collect(Collectors.toList());
 
         //username, password, Authority List
-        User user = new User(smember.getMid(), smember.getMpw(),authList);
+//        User user = new User(smember.getMid(), smember.getMpw(),authList);
+        SmemeberDTO smemeberDTO = new SmemeberDTO(smember.getMid(), smember.getMpw(),authList);
+        smemeberDTO.setNickname(smember.getNickname());
 
-        return user;
+        return smemeberDTO;
     }
 }

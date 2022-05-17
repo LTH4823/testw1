@@ -9,6 +9,7 @@
 
         <input name="username">
         <input name="password">
+        <input type="checkbox" name="remember-me">로그인 기억하기
         <button>Login</button>
 
     </form>

@@ -20,6 +20,8 @@
 
         <security:csrf disabled="true"></security:csrf>
 
+        <security:remember-me key="12345678"></security:remember-me>
+
     </security:http>
 
 
